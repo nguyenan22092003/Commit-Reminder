@@ -1,0 +1,41 @@
+name: GitHub Commit Reminder
+
+on:
+  schedule:
+    - cron: "0 18 * * *"  # Runs every day at 6 PM UTC (adjust as needed)
+  workflow_dispatch:  # Allows manual execution
+
+jobs:
+  check-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Latest Commit Date
+        id: commit-date
+        run: echo "LAST_COMMIT=$(git log -1 --format=%ct)" >> $GITHUB_ENV
+
+      - name: Get Today's Date
+        id: today-date
+        run: echo "TODAY=$(date +%s)" >> $GITHUB_ENV
+
+      - name: Check if committed today
+        run: |
+          if [ $(($TODAY - $LAST_COMMIT)) -gt 86400 ]; then
+            echo "No commit today! Sending a reminder..."
+            exit 1
+          else
+            echo "Commit already made today. You're good! ✅"
+          fi
+
+      - name: Send Notification (via Email)
+        if: failure()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: "🚀 Reminder: Commit to GitHub Today!"
+          body: "You haven't committed yet today! Keep your streak alive! 🔥"
+          to: your-email@example.com
+          from: GitHub Reminder Bot
+
