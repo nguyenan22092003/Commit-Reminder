@@ -9,9 +9,14 @@ jobs:
   check-commit:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
       - name: Get Latest Commit Date
         id: commit-date
-        run: echo "LAST_COMMIT=$(git log -1 --format=%ct)" >> $GITHUB_ENV
+        run: |
+          LAST_COMMIT=$(git log -1 --format=%ct || echo 0)
+          echo "LAST_COMMIT=$LAST_COMMIT" >> $GITHUB_ENV
 
       - name: Get Today's Date
         id: today-date
@@ -19,7 +24,10 @@ jobs:
 
       - name: Check if committed today
         run: |
-          if [ $(($TODAY - $LAST_COMMIT)) -gt 86400 ]; then
+          if [ $LAST_COMMIT -eq 0 ]; then
+            echo "No commits found in the repository."
+            exit 1
+          elif [ $(($TODAY - $LAST_COMMIT)) -gt 86400 ]; then
             echo "No commit today! Sending a reminder..."
             exit 1
           else
@@ -38,4 +46,3 @@ jobs:
           body: "You haven't committed yet today! Keep your streak alive! 🔥"
           to: your-email@example.com
           from: GitHub Reminder Bot
-
