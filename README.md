@@ -21,7 +21,7 @@ name: GitHub Commit Reminder
 
 on:
   schedule:
-    - cron: "0 18 * * *"  # Runs every day at 6 PM UTC
+    - cron: "0 18 * * *"  # Runs every day at 6 PM UTC ( if you're in VietNam: "0 11 * * *"  # Runs at 6 PM Vietnam time (11 AM UTC))
   workflow_dispatch:  # Allows manual execution
 
 jobs:
