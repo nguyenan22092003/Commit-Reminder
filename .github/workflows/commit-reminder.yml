@@ -9,13 +9,10 @@ jobs:
   send-email:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository (Optional)
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 1  # Improves performance by fetching only the latest commit
-
-      - name: Log Execution Time
-        run: echo "Workflow triggered at $(date)"
+      - name: Set Date & Time Variables
+        run: |
+          echo "CURRENT_DATE=$(date +"%A, %B %d, %Y")" >> $GITHUB_ENV
+          echo "CURRENT_TIME=$(date +"%H:%M:%S UTC")" >> $GITHUB_ENV
 
       - name: Send Daily Reminder Email
         uses: dawidd6/action-send-mail@v3
@@ -33,13 +30,13 @@ jobs:
 
             **Stay motivated, stay productive!** 💪🔥
 
-            📅 **Date:** $(date +"%A, %B %d, %Y")  
-            ⏰ **Current Time (UTC):** $(date +"%H:%M:%S")  
+            📅 **Date:** ${{ env.CURRENT_DATE }}  
+            ⏰ **Current Time (UTC):** ${{ env.CURRENT_TIME }}  
 
             Best,  
             **GitHub Reminder Bot**
-          to: nguyenluthao252@gmail.com
+          to: your-email@gmail.com
           from: "GitHub Reminder Bot <your-email@gmail.com>"
 
       - name: Confirm Email Sent
-        run: echo "✅ Email sent successfully at $(date)"
+        run: echo "✅ Email sent successfully on ${{ env.CURRENT_DATE }} at ${{ env.CURRENT_TIME }}"
