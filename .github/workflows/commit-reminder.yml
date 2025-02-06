@@ -1,4 +1,4 @@
-name: GitHub Commit Reminder
+name: Daily Email Reminder
 
 on:
   schedule:
@@ -6,43 +6,17 @@ on:
   workflow_dispatch:  # Allows manual execution
 
 jobs:
-  check-commit:
+  send-email:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v2
-
-      - name: Get Latest Commit Date
-        id: commit-date
-        run: |
-          LAST_COMMIT=$(git log -1 --format=%ct || echo 0)
-          echo "LAST_COMMIT=$LAST_COMMIT" >> $GITHUB_ENV
-
-      - name: Get Today's Date
-        id: today-date
-        run: echo "TODAY=$(date +%s)" >> $GITHUB_ENV
-
-      - name: Check if committed today
-        run: |
-          if [ $LAST_COMMIT -eq 0 ]; then
-            echo "No commits found in the repository."
-            exit 1
-          elif [ $(($TODAY - $LAST_COMMIT)) -gt 86400 ]; then
-            echo "No commit today! Sending a reminder..."
-            exit 1
-          else
-            echo "Commit already made today. You're good! ✅"
-          fi
-
-      - name: Send Notification (via Email)
-        if: failure()
+      - name: Send Daily Reminder Email
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.gmail.com
           server_port: 465
           username: ${{ secrets.EMAIL_USERNAME }}
           password: ${{ secrets.EMAIL_PASSWORD }}
-          subject: "🚀 Reminder: Commit to GitHub Today!"
-          body: "You haven't committed yet today! Keep your streak alive! 🔥"
-          to: your-email@example.com
+          subject: "🚀 Daily Reminder: Don't Forget to Commit!"
+          body: "This is your daily reminder to commit your work to GitHub! Stay consistent! 💪🔥"
+          to: your-email@gmail.com
           from: GitHub Reminder Bot
