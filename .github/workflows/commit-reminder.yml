@@ -9,6 +9,14 @@ jobs:
   send-email:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout Repository (Optional)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1  # Improves performance by fetching only the latest commit
+
+      - name: Log Execution Time
+        run: echo "Workflow triggered at $(date)"
+
       - name: Send Daily Reminder Email
         uses: dawidd6/action-send-mail@v3
         with:
@@ -16,7 +24,22 @@ jobs:
           server_port: 465
           username: ${{ secrets.EMAIL_USERNAME }}
           password: ${{ secrets.EMAIL_PASSWORD }}
-          subject: "🚀 Daily Reminder: Don't Forget to Commit!"
-          body: "This is your daily reminder to commit your work to GitHub! Stay consistent! 💪🔥"
-          to: your-email@gmail.com
-          from: GitHub Reminder Bot
+          subject: "🚀 Stay on Track! Daily GitHub Commit Reminder"
+          body: |
+            Hi there! 👋
+
+            This is your **daily reminder** to commit your progress on GitHub! 🚀  
+            Keep up the consistency and push your changes.  
+
+            **Stay motivated, stay productive!** 💪🔥
+
+            📅 **Date:** $(date +"%A, %B %d, %Y")  
+            ⏰ **Current Time (UTC):** $(date +"%H:%M:%S")  
+
+            Best,  
+            **GitHub Reminder Bot**
+          to: nguyenluthao252@gmail.com
+          from: "GitHub Reminder Bot <your-email@gmail.com>"
+
+      - name: Confirm Email Sent
+        run: echo "✅ Email sent successfully at $(date)"
