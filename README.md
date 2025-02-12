@@ -17,54 +17,48 @@ Ensure GitHub Actions is enabled for your repository.
 Save the following workflow as `.github/workflows/commit-reminder.yml` in your repository:
 
 ```yaml
-name: GitHub Commit Reminder
+name: Daily Email Reminder
 
 on:
   schedule:
-    - cron: "0 18 * * *"  # Runs every day at 6 PM UTC ( if you're in VietNam: "0 11 * * *"  # Runs at 6 PM Vietnam time (11 AM UTC))
+    - cron: "0 11 * * *"  # Runs at 6 PM Vietnam time (11 AM UTC)
   workflow_dispatch:  # Allows manual execution
 
 jobs:
-  check-commit:
+  send-email:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v2
-
-      - name: Get Latest Commit Date
-        id: commit-date
+      - name: Set Date & Time Variables
         run: |
-          LAST_COMMIT=$(git log -1 --format=%ct || echo 0)
-          echo "LAST_COMMIT=$LAST_COMMIT" >> $GITHUB_ENV
+          echo "CURRENT_DATE=$(date +"%A, %B %d, %Y")" >> $GITHUB_ENV
+          echo "CURRENT_TIME=$(date +"%H:%M:%S UTC")" >> $GITHUB_ENV
 
-      - name: Get Today's Date
-        id: today-date
-        run: echo "TODAY=$(date +%s)" >> $GITHUB_ENV
-
-      - name: Check if committed today
-        run: |
-          if [ $LAST_COMMIT -eq 0 ]; then
-            echo "No commits found in the repository."
-            exit 1
-          elif [ $(($TODAY - $LAST_COMMIT)) -gt 86400 ]; then
-            echo "No commit today! Sending a reminder..."
-            exit 1
-          else
-            echo "Commit already made today. You're good! ✅"
-          fi
-
-      - name: Send Notification (via Email)
-        if: failure()
+      - name: Send Daily Reminder Email
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.gmail.com
           server_port: 465
           username: ${{ secrets.EMAIL_USERNAME }}
           password: ${{ secrets.EMAIL_PASSWORD }}
-          subject: "🚀 Reminder: Commit to GitHub Today!"
-          body: "You haven't committed yet today! Keep your streak alive! 🔥"
-          to: your-email@example.com
-          from: GitHub Reminder Bot
+          subject: "🚀 Stay on Track! Daily GitHub Commit Reminder"
+          body: |
+            Hi there! 👋
+
+            This is your **daily reminder** to commit your progress on GitHub! 🚀  
+            Keep up the consistency and push your changes.  
+
+            **Stay motivated, stay productive!** 💪🔥
+
+            📅 **Date:** ${{ env.CURRENT_DATE }}  
+            ⏰ **Current Time (UTC):** ${{ env.CURRENT_TIME }}  
+
+            Best,  
+            **GitHub Reminder Bot**
+          to: your-email@gmail.com
+          from: "GitHub Reminder Bot <your-email@gmail.com>"
+
+      - name: Confirm Email Sent
+        run: echo "✅ Email sent successfully on ${{ env.CURRENT_DATE }} at ${{ env.CURRENT_TIME }}"
 ```
 
 ### 3️⃣ Configure Email Notifications
