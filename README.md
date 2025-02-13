@@ -3,7 +3,7 @@
 This GitHub Action checks if you have committed to your repository today. If no commits are found for the day, it sends a reminder notification via email.
 
 ## Features
-- Runs daily at 6 PM UTC using a cron schedule.
+- Runs daily at 6 PM in VietNam using a cron schedule.
 - Checks if a commit has been made today.
 - Sends an email notification if no commit is found.
 - Can be manually triggered via workflow dispatch.
