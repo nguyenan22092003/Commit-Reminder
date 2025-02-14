@@ -1,11 +1,11 @@
 # GitHub Commit Reminder
 
-This GitHub Action checks if you have committed to your repository today. If no commits are found for the day, it sends a reminder notification via email.
+This GitHub Action sends a daily email reminder regardless of whether a commit has been made. It runs at 6 PM Vietnam time and provides the current date and time in the notification.
 
 ## Features
-- Runs daily at 6 PM in VietNam using a cron schedule.
-- Checks if a commit has been made today.
-- Sends an email notification if no commit is found.
+- Runs daily at 6 PM Vietnam time using a cron schedule.
+- Sends an email notification every day.
+- Includes the current date and time in the email.
 - Can be manually triggered via workflow dispatch.
 
 ## Setup Instructions
@@ -40,14 +40,12 @@ jobs:
           server_port: 465
           username: ${{ secrets.EMAIL_USERNAME }}
           password: ${{ secrets.EMAIL_PASSWORD }}
-          subject: "🚀 Stay on Track! Daily GitHub Commit Reminder"
+          subject: "🚀 Daily GitHub Reminder"
           body: |
             Hi there! 👋
 
-            This is your **daily reminder** to commit your progress on GitHub! 🚀  
-            Keep up the consistency and push your changes.  
-
-            **Stay motivated, stay productive!** 💪🔥
+            This is your **daily reminder** from GitHub! 🚀  
+            Stay on track and keep pushing forward.  
 
             📅 **Date:** ${{ env.CURRENT_DATE }}  
             ⏰ **Current Time (UTC):** ${{ env.CURRENT_TIME }}  
@@ -67,11 +65,12 @@ Since GitHub Actions cannot directly send emails, this workflow uses `dawidd6/ac
 #### Add GitHub Secrets:
 Go to **Settings > Secrets and Variables > Actions > New Repository Secret** and add:
 - `EMAIL_USERNAME`: Your email address.
-- `EMAIL_PASSWORD`: App password for SMTP authentication (to open app passwords, make sure you turn on your email two steps verification: [Gmail App Password](https://myaccount.google.com/apppasswords)).
+- `EMAIL_PASSWORD`: App password for SMTP authentication (Ensure two-step verification is enabled for your email: [Gmail App Password](https://myaccount.google.com/apppasswords)).
 
 ### 4️⃣ Commit and Push
-Commit the workflow file and push it to your repository. The action will automatically run daily and notify you if no commit is detected.
+Commit the workflow file and push it to your repository. The action will automatically run daily and send an email reminder.
 
+---
 
-Enjoy keeping your GitHub streak alive! 🚀
+Stay productive with your daily GitHub reminder! 🚀
 
