@@ -35,7 +35,7 @@ jobs:
 
             Best,  
             **GitHub Reminder Bot**
-          to: nguyenluthao252@gmail.com
+          to: nguyenan22092003@gmail.com
           from: "GitHub Reminder Bot <your-email@gmail.com>"
 
       - name: Confirm Email Sent
