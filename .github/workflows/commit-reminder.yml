@@ -35,8 +35,8 @@ jobs:
 
             Best,  
             **GitHub Reminder Bot**
-          to: nguyenan22092003@gmail.com
-          from: "GitHub Reminder Bot <your-email@gmail.com>"
+          to: greenifyvn.intern2@gmail.com
+          from: "GitHub Reminder Bot nguyenan22092003@gmail.com"
 
       - name: Confirm Email Sent
         run: echo "✅ Email sent successfully on ${{ env.CURRENT_DATE }} at ${{ env.CURRENT_TIME }}"
